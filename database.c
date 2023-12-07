@@ -27,8 +27,13 @@ int database_new_id(Database *db) {
     if (getc(db->file_start) == EOF) {
       return ++id;
     }
-    fseek(db->file_start, -2, SEEK_END);
-    while (getc(db->file_start) != '\n') {
+    fseek(db->file_start, 0, SEEK_END);
+		char buff;
+    while ((buff=getc(db->file_start)) != '\n') {
+			if(buff == -1){
+				rewind(db->file_start);
+				break;
+			}
 			printf("stuck in newid");
       fseek(db->file_start, -2, SEEK_CUR);
     }
@@ -129,8 +134,31 @@ void database_edit(Database *db, int key) {
     } else {
       fprintf(tmp, "%s", line);
     }
-    remove(db->filename);
-		rename("tmp.txt", db->filename);
-		db = database_init(db->filename);
-  };
+	}
+	fclose(db->file_start);
+	printf("remove success? %d\n",remove(db->filename));
+	rename("tmp.txt", db->filename);
+	db = database_init(db->filename);
+}
+
+
+void database_remove(Database* db, int key) {
+  FILE *tmp = fopen("tmp.txt", "w");
+  rewind(db->file_start);
+  char *line = (char *)malloc(sizeof(char) * 512);
+  while (fgets(line, 512, db->file_start) != NULL) {
+    int k;
+    separate_key_val(line, &k, NULL);
+    if (k == key) {
+			;
+    } else {
+      fprintf(tmp, "%s", line);
+    }
+	}
+	fclose(db->file_start);
+	printf("remove success? %d\n",remove(db->filename));
+	rename("tmp.txt", db->filename);
+	db = database_init(db->filename);
+
+
 }

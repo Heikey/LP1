@@ -82,7 +82,9 @@ int main() {
 				char* input = (char*)malloc(sizeof(char)*512);
 				fgets(input,512,stdin);
 				trim(input);
+				printf("NUMBER: %s",input);
 				if(atoi(input) == 0){
+					printf("zero!\n");
 					break;
 				}
 				if(isnumber(input)) {
@@ -90,7 +92,19 @@ int main() {
 				}
         break;
       case 3:
-        printf("opc3\n\n");
+        database_list(db);
+				printf("Select one Id to edit, or press [0] and Enter to exit...");
+				char* input = (char*)malloc(sizeof(char)*512);
+				fgets(input,512,stdin);
+				trim(input);
+				printf("NUMBER: %s",input);
+				if(atoi(input) == 0){
+					printf("zero!\n");
+					break;
+				}
+				if(isnumber(input)) {
+					database_edit(db, atoi(input));
+				}
         break;
       case 4:
         exit(1);
