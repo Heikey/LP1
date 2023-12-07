@@ -34,7 +34,6 @@ int database_new_id(Database *db) {
 				rewind(db->file_start);
 				break;
 			}
-			printf("stuck in newid");
       fseek(db->file_start, -2, SEEK_CUR);
     }
     char *last_line = (char *)malloc(512);
@@ -59,7 +58,6 @@ Database *database_init(char *file_path) {
   if ((file = fopen(file_path, "r+")) == NULL) {
     file = fopen(file_path, "w+");
   };
-
   // check if file is created
   assert(file != NULL);
   Database *db = database_alloc();
@@ -116,7 +114,8 @@ void database_list(Database *db) {
   char *buff = (char *)malloc(sizeof(char) * 512);
   while (fgets(buff, 512, db->file_start)) {
     printf("%s\n", buff);
-  };
+	};
+	rewind(db->file_start);
 }
 
 void database_edit(Database *db, int key) {
@@ -130,15 +129,16 @@ void database_edit(Database *db, int key) {
       Medicine *med = medicine_alloc();
       medicine_read(med);
       char *out = medicine_serialize(med);
-      fprintf(tmp, "%s\n", out);
+      fprintf(tmp, "%d|%s\n", key, out);
     } else {
       fprintf(tmp, "%s", line);
     }
 	}
 	fclose(db->file_start);
-	printf("remove success? %d\n",remove(db->filename));
+	fclose(tmp);
+	remove(db->filename);
 	rename("tmp.txt", db->filename);
-	db = database_init(db->filename);
+	db->file_start = fopen(db->filename,"r+");
 }
 
 

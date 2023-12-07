@@ -6,16 +6,18 @@
 #include <string.h>
 
 void clear_console() {
-  // little hack for clear terminal in windows and *nix systems
+  // Limpa o console
   if (system("cls"))
     system("clear");
 }
 
+// Remove o \n da string
 void trim(char* string) {
 	if(string[strlen(string)-1] == '\n')
 		string[strlen(string)-1] = '\0';
 }
 
+// Checa se o usuario digitou um numero e não uma string 
 int isnumber(char* string) {
 	for(int i = 0;i<strlen(string);++i){
 		if(!isdigit(string[i])){
@@ -30,19 +32,6 @@ void clear_buffer() {
   int c;
   while ((c = getchar()) != '\n' && c != EOF)
     ;
-}
-
-// Função para verificar se a entrada é um inteiro.
-int entry_check(char choice) {
-  // Verifica se a entrada é um número
-  if (isdigit(choice)) {
-    clear_buffer();
-    return 1;
-  } else {
-    printf("ERRO: Character entered is not among the options!\n\n");
-    clear_buffer();
-    return 0;
-  }
 }
 
 int main() {
@@ -61,8 +50,10 @@ int main() {
     // Entrada do usuario.
     printf("Type here: ");
     scanf(" %c", &choice);
+		clear_buffer();
     clear_console();
-    if (entry_check(choice)) {
+    if (isnumber(&choice)) {
+			fflush(stdin);
       int choice_ = atoi(&choice);
       switch (choice_) {
       case 1:
@@ -82,9 +73,7 @@ int main() {
 				char* input = (char*)malloc(sizeof(char)*512);
 				fgets(input,512,stdin);
 				trim(input);
-				printf("NUMBER: %s",input);
 				if(atoi(input) == 0){
-					printf("zero!\n");
 					break;
 				}
 				if(isnumber(input)) {
@@ -93,17 +82,16 @@ int main() {
         break;
       case 3:
         database_list(db);
-				printf("Select one Id to edit, or press [0] and Enter to exit...");
-				char* input = (char*)malloc(sizeof(char)*512);
-				fgets(input,512,stdin);
-				trim(input);
-				printf("NUMBER: %s",input);
+				printf("Select one Id to remove, or press [0] and Enter to exit...");
+				char* input_ = (char*)malloc(sizeof(char)*512);
+				fgets(input_,512,stdin);
+				trim(input_);
 				if(atoi(input) == 0){
 					printf("zero!\n");
 					break;
 				}
 				if(isnumber(input)) {
-					database_edit(db, atoi(input));
+					database_remove(db, atoi(input));
 				}
         break;
       case 4:

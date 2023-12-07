@@ -9,5 +9,6 @@ int database_goto(Database *db, int key);
 int database_read(Database *db, char *dst, int key);
 void database_list(Database* db);
 void database_edit(Database* db, int key);
+void database_remove(Database* db, int key);
 
 #endif

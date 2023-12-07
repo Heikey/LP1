@@ -9,15 +9,21 @@
 
 #define BUFF_MAX 128
 
+// Essa função remove o \n da string
+inline void trim(char* string) {
+	if(string[strlen(string)-1] == '\n')
+		string[strlen(string)-1] = '\0';
+}
+
 typedef struct TagMedicine {
 	char* name;
 	char* lab;
 	char* supplier;
 	long int code;
 	float price;
-	time_t buy_date;
 } Medicine;
 
+// Função responsavel pelo alocamento da struct
 Medicine* medicine_alloc() {
 	Medicine* out = (Medicine*)malloc(sizeof(Medicine));
 	out->name = (char*)malloc(sizeof(char) * BUFF_MAX);
@@ -26,10 +32,7 @@ Medicine* medicine_alloc() {
 	return out;
 }
 
-inline void trim(char* string) {
-	string[strlen(string)-1] = '\0';
-}
-
+// Pega os dados inseridos pelo usuario e passa pra struct Medicine
 int medicine_read(Medicine* med) {
 	printf("Escreva o nome do produto:");
 	fflush(stdin);
@@ -51,17 +54,17 @@ int medicine_read(Medicine* med) {
 
 	printf("Digite o preço do produto:");
 	scanf("%f", &med->price);
-	med->buy_date = time(NULL);
 	return 1;
 }
 
+// Transformar a struct em string
 char* medicine_serialize(Medicine* med) {
 		char* string;
-		asprintf(&string,"\"%s\", \"%s\", \"%s\", \"%li\", \"%.2f\", \"%li\"",med->name,med->lab,med->supplier,med->code,med->price,med->buy_date);
-		printf("string = %s\n",string);
+		asprintf(&string,"\"%s\", \"%s\", \"%s\", \"%li\", \"%.2f\"",med->name,med->lab,med->supplier,med->code,med->price);
 		return string;
 }
 
+// Função que separa os valores das chaves
 void separate_key_val(char* line, int *key, char* val) {
 		char* id = (char*)malloc(10);
 		id = strsep(&line, "|");
@@ -70,6 +73,7 @@ void separate_key_val(char* line, int *key, char* val) {
 		if(val!=NULL)
 			*val = *line;
 }
+
 
 void medicine_deserialize(char* string, Medicine* med) {
 	int selected;
@@ -81,5 +85,4 @@ void medicine_deserialize(char* string, Medicine* med) {
 	char* code = strsep(&value,"\", ");
 	char* price = strsep(&value,"\", ");
 	char* date = strsep(&value,"\", ");
-
 }
