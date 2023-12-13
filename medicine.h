@@ -21,7 +21,7 @@ void time_read(Time *time_, int now);
 int time_cmp(Time *t1, Time *t2);
 
 Medicine *medicine_alloc();
-int medicine_read(Medicine *med);
+void medicine_read(void *med_);
 
 int medicine_identity(void *med);
 

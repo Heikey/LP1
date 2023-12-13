@@ -11,22 +11,6 @@ void clear_console() {
     system("clear");
 }
 
-<<<<<<< HEAD
-// Remove o \n da string
-void trim(char* string) {
-	if(string[strlen(string)-1] == '\n')
-		string[strlen(string)-1] = '\0';
-}
-
-// Checa se o usuario digitou um numero e não uma string 
-int isnumber(char* string) {
-	for(int i = 0;i<strlen(string);++i){
-		if(!isdigit(string[i])){
-				return 0;
-		};
-	}
-	return 1;
-=======
 void trim(char *string) {
   if (string[strlen(string) - 1] == '\n')
     string[strlen(string) - 1] = '\0';
@@ -39,7 +23,6 @@ int isnumber(char *string) {
     };
   }
   return 1;
->>>>>>> Oops...
 }
 
 // Limpar o buffer do teclado
@@ -73,41 +56,10 @@ int main() {
       switch (choice_) {
       case 1:;
         Medicine *med = medicine_alloc();
-        if (medicine_read(med)) {
-          database_add(db, med, sizeof(Medicine));
-        } else {
-          printf("ERRO: can't read the product info.\n");
-        }
+        medicine_read(med); 
+				database_add(db, med, sizeof(Medicine));
         break;
       case 2:
-<<<<<<< HEAD
-        database_list(db);
-				printf("Select one Id to edit, or press [0] and Enter to exit...");
-
-				char* input = (char*)malloc(sizeof(char)*512);
-				fgets(input,512,stdin);
-				trim(input);
-				if(atoi(input) == 0){
-					break;
-				}
-				if(isnumber(input)) {
-					database_edit(db, atoi(input));
-				}
-        break;
-      case 3:
-        database_list(db);
-				printf("Select one Id to remove, or press [0] and Enter to exit...");
-				char* input_ = (char*)malloc(sizeof(char)*512);
-				fgets(input_,512,stdin);
-				trim(input_);
-				if(atoi(input) == 0){
-					printf("zero!\n");
-					break;
-				}
-				if(isnumber(input)) {
-					database_remove(db, atoi(input));
-				}
-=======
         printf("Select one Id to edit, or press [0] and Enter to exit...");
         // database_list(db);
         char *input = (char *)malloc(sizeof(char) * 512);
@@ -133,7 +85,6 @@ int main() {
           database_remove(db, sizeof(Medicine), medicine_identity, 1);
           break;
         }
->>>>>>> Oops...
         break;
       case 4:
         exit(1);
