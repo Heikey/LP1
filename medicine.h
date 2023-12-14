@@ -17,8 +17,7 @@ typedef struct TagMedicine {
   Time buy_date;
 } Medicine;
 
-void time_read(Time *time_, int now);
-int time_cmp(Time *t1, Time *t2);
+void time_read(Time *time_);
 
 Medicine *medicine_alloc();
 void medicine_read(void *med_);

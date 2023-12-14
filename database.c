@@ -28,13 +28,17 @@ Database *database_init(char *filename) {
 void database_list(Database *db, size_t size, void format(void *val)) {
   void *tmp_obj;
   while (fread(tmp_obj, size, 1, db->file) != 0) {
-		format(tmp_obj);
+    format(tmp_obj);
   }
-	rewind(db->file);
+  rewind(db->file);
 }
 
 // adiciona um valor para a Database
 void database_add(Database *db, void *value, size_t size) {
+  static int id = 0;
+  id++;
+  Medicine *tmp___ = value;
+  tmp___->ID = id;
   fseek(db->file, 0, SEEK_END);
   int valid = fwrite(value, size, 1, db->file);
   rewind(db->file);
@@ -45,12 +49,16 @@ void database_add(Database *db, void *value, size_t size) {
 // tipo e uma função que edita o valor.
 void database_edit(Database *db, size_t size, int id,
                    int func_identify(void *val), void func_read(void *)) {
+  rewind(db->file);
   FILE *tmp = fopen("tmp.txt", "w+b");
-  void *tmp_obj;
+  void *tmp_obj = malloc(size);
+  printf("coisou\n");
   while (fread(tmp_obj, size, 1, db->file) != 0) {
     if (func_identify(tmp_obj) != id) {
       fwrite(tmp_obj, size, 1, tmp);
     } else {
+      func_read(tmp_obj);
+      fwrite(tmp_obj, size, 1, tmp);
     }
   }
   fclose(tmp);
@@ -60,27 +68,13 @@ void database_edit(Database *db, size_t size, int id,
   db->file = fopen(db->filename, "r+b");
 }
 
-void *database_filter(Database *db, size_t size,
-                      int filter_func(void *value, void *arg), void *arg) {
-  void *tmp;
-  while (1) {
-    if (fread(tmp, size, 1, db->file) == 0) {
-      return NULL;
-
-      if (filter_func(tmp, arg) == 1) {
-        fseek(db->file, -size, SEEK_CUR);
-        return tmp;
-      }
-    }
-  }
-}
-
 void database_remove(Database *db, size_t size, int func_identify(void *value),
-                     int identifier) {
+                     int id) {
+  rewind(db->file);
   FILE *tmp = fopen("tmp.txt", "w+b");
-  void *tmp_obj;
+  void *tmp_obj = malloc(size);
   while (fread(tmp_obj, size, 1, db->file) != 0) {
-    if (func_identify(tmp_obj) != identifier) {
+    if (func_identify(tmp_obj) != id) {
       fwrite(tmp_obj, size, 1, tmp);
     }
   }
