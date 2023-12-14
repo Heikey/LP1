@@ -30,7 +30,7 @@ int time_cmp(Time *t1, Time *t2) {
 }
 
 void time_print(Time *time) {
-  printf("%d/%d/%d", time->day, time->month, time->year);
+  printf("Dia de compra:%d/%d/%d\n", time->day, time->month, time->year);
 }
 
 Medicine *medicine_alloc() {
@@ -82,13 +82,16 @@ void medicine_read(void *med_) {
   med->buy_date = buy_date;
 }
 
-void medicine_print(Medicine *med) {
+void medicine_format(void *med_) {
+	Medicine* med = (Medicine*) med_;
+	printf("Id: %d\n",med->ID);
   printf("Nome: %s\n", med->name);
   printf("Laboratorio: %s\n", med->lab);
   printf("Fornecedor: %s\n", med->supplier);
   printf("Codigo: %lil\n", med->code);
   printf("Preço: %.2f\n", med->price);
   time_print(&med->buy_date);
+	printf("\n");
 }
 
 int medicine_identity(void *med) { return ((Medicine *)med)->ID; }

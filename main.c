@@ -5,17 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+// Limpa o console
 void clear_console() {
-  // Limpa o console
   if (system("cls"))
     system("clear");
 }
-
+// caso o ultimo caractere seja uma quebra de linha(\n), remove e troca por um \0 para remover
 void trim(char *string) {
   if (string[strlen(string) - 1] == '\n')
     string[strlen(string) - 1] = '\0';
 }
-
+// checa se a string é um numero
 int isnumber(char *string) {
   for (int i = 0; i < strlen(string); ++i) {
     if (!isdigit(string[i])) {
@@ -34,6 +35,7 @@ void clear_buffer() {
 
 int main() {
   char choice;
+	// inicializa a database com um arquivo chamado de product.txt
   Database *db = database_init("product.txt");
   while (1) {
     clear_console();
@@ -54,42 +56,48 @@ int main() {
 			fflush(stdin);
       int choice_ = atoi(&choice);
       switch (choice_) {
-      case 1:;
+      case 1:
+				// esse ; perdido é um erro do codigo, tem que colocar esse ; para não dar erro
+				;
         Medicine *med = medicine_alloc();
         medicine_read(med); 
+				// adiciona o medicamento na database
 				database_add(db, med, sizeof(Medicine));
         break;
       case 2:
+        // esssa função mostra todos os produtos da database, usando uma função de formatar o valor para uma string
+				database_list(db,sizeof(Medicine),medicine_format);
         printf("Select one Id to edit, or press [0] and Enter to exit...");
-        // database_list(db);
         char *input = (char *)malloc(sizeof(char) * 512);
         fgets(input, 512, stdin);
         trim(input);
+				// caso escolha zero, volte pro começo
         if (atoi(input) == 0) {
           break;
         }
         if (isnumber(input)) {
-          database_edit(db, atoi(input), medicine_identity, medicine_read);
+					// essa função edita o elemento de id atoi(input) usando uma função para identificar o id unico do valor,
+					//	e como argumento final, recebe uma função para "ler" o valor, assim editando o conteudo
+          database_edit(db, atoi(input), sizeof(Medicine), medicine_identity, medicine_read);
         }
         break;
       case 3:
-        // database_list(db);
-        printf("Select one Id to edit, or press [0] and Enter to exit...");
+				database_list(db,sizeof(Medicine),medicine_format);
+        printf("Select one Id to delete, or press [0] and Enter to exit...");
         char *input_ = (char *)malloc(sizeof(char) * 512);
         fgets(input_, 512, stdin);
         trim(input_);
-        if (atoi(input_) == 0) {
+				int input_int = atoi(input_);
+        if (input_int == 0) {
           break;
         }
-        if (isnumber(input_)) {
-          database_remove(db, sizeof(Medicine), medicine_identity, 1);
-          break;
-        }
+				// Aqui, iremos remover o elemento de id (atoi
+				database_remove(db, sizeof(Medicine), medicine_identity,input_int);
         break;
       case 4:
         exit(1);
       default:
-        printf("Invalid digit!");
+				break;
       }
     } else {
       continue;
