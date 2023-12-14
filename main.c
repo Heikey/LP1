@@ -41,15 +41,15 @@ int main() {
   while (1) {
     clear_console();
     printf("===================================\n");
-    printf("\t\tWhat do you want to do?\t\n\n");
-    printf("[1] Register product \n");
-    printf("[2] List the products and their suppliers and edit \n");
-    printf("[3] Remove registration from a product\n");
-    printf("[4] Exit\n\n");
+    printf("\t\tEscolha uma opção\t\n\n");
+    printf("[1] Registrar um produto \n");
+    printf("[2] Listar os produtos e editar \n");
+    printf("[3] Listar os produtos e remover \n");
+    printf("[4] Sair\n\n");
     printf("===================================\n");
 
     // Entrada do usuario.
-    printf("Type here: ");
+    printf("Digite aqui: ");
     scanf(" %c", &choice);
     clear_buffer();
     clear_console();
@@ -70,7 +70,7 @@ int main() {
         // essa função mostra todos os produtos da database, usando uma função
         // de formatar o valor para uma string
         database_list(db, sizeof(Medicine), medicine_format);
-        printf("Select one Id to edit, or press [0] and Enter to exit...");
+        printf("Selcione um ID, ou pressiona [0] para cancelar:");
         char *input = (char *)malloc(sizeof(char) * 512);
         fgets(input, 512, stdin);
         trim(input);
@@ -89,11 +89,12 @@ int main() {
         break;
       case 3:
         database_list(db, sizeof(Medicine), medicine_format);
-        printf("Select one Id to delete, or press [0] and Enter to exit...");
+        printf("Selcione um ID, ou pressiona [0] para cancelar:");
         char *input_ = (char *)malloc(sizeof(char) * 512);
         fgets(input_, 512, stdin);
         trim(input_);
         int input_int = atoi(input_);
+				// caso seja 0, volte para o começo
         if (input_int == 0) {
           break;
         }
@@ -101,7 +102,7 @@ int main() {
         database_remove(db, sizeof(Medicine), medicine_identity, input_int);
         break;
       case 4:
-        exit(1);
+        exit(0);
       default:
         break;
       }
@@ -109,6 +110,5 @@ int main() {
       continue;
     }
   }
-  printf("Leaving...");
   return 0;
 }

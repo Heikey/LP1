@@ -8,6 +8,7 @@
 
 #define BUFF_MAX 128
 
+// inicializar o Time
 void time_read(Time *time_) {
   struct tm day_tm;
 	time_t now_ = time(NULL);
@@ -21,18 +22,20 @@ void time_print(Time *time) {
   printf("Dia de compra:%d/%d/%d\n", time->day, time->month, time->year);
 }
 
+// função para alocar 
 Medicine *medicine_alloc() {
   return (Medicine *)malloc(sizeof(Medicine));
 }
 
+// pequena gambiarra para a função trim funcionar aqui
 inline void trim(char *string) {
   if (string[strlen(string) - 1] == '\n')
     string[strlen(string) - 1] = '\0';
 }
 
+// inicializar o Medicine
 void medicine_read(void *med_) {
 	Medicine* med;
-
 	if(med_ == NULL){
 		med = medicine_alloc(); 
 	}else{
@@ -64,6 +67,7 @@ void medicine_read(void *med_) {
   med->buy_date = buy_date;
 }
 
+// dá um "print" no Medicine
 void medicine_format(void *med_) {
 	Medicine* med = (Medicine*) med_;
 	printf("Id: %d\n",med->ID);
@@ -76,4 +80,5 @@ void medicine_format(void *med_) {
 	printf("\n");
 }
 
+// extrai o ID da Medicine
 int medicine_identity(void *med) { return ((Medicine *)med)->ID; }

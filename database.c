@@ -15,6 +15,7 @@ Database *database_alloc() { return (Database *)malloc(sizeof(Database)); }
 Database *database_init(char *filename) {
   Database *db = database_alloc();
   FILE *file;
+	// tenta abrir o arquivo, se não conseguir, cria um novo
   if ((file = fopen(filename, "r+b")) == NULL)
     file = fopen(filename, "w+b");
 
@@ -37,6 +38,7 @@ void database_list(Database *db, size_t size, void format(void *val)) {
 void database_add(Database *db, void *value, size_t size) {
   static int id = 0;
   id++;
+	// Gambiarra pra não ficar passando o valor de sizeof(tipo) em tudo
   Medicine *tmp___ = value;
   tmp___->ID = id;
   fseek(db->file, 0, SEEK_END);
@@ -52,7 +54,6 @@ void database_edit(Database *db, size_t size, int id,
   rewind(db->file);
   FILE *tmp = fopen("tmp.txt", "w+b");
   void *tmp_obj = malloc(size);
-  printf("coisou\n");
   while (fread(tmp_obj, size, 1, db->file) != 0) {
     if (func_identify(tmp_obj) != id) {
       fwrite(tmp_obj, size, 1, tmp);
@@ -68,6 +69,7 @@ void database_edit(Database *db, size_t size, int id,
   db->file = fopen(db->filename, "r+b");
 }
 
+// Essa função funciona da mesma forma que o database_edit, só que ao inves de editar o valor, ele ignora
 void database_remove(Database *db, size_t size, int func_identify(void *value),
                      int id) {
   rewind(db->file);
